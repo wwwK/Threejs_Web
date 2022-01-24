@@ -54,9 +54,7 @@ const canvas = document.querySelector('#c');
 
 let theModel;
 // GLB파일 경로
-const MODEL_PATH1 = "./models/test_shelf.glb"
-const MODEL_PATH2 = "./models/Frame.glb"
-const MODEL_PATH3 = "./models/Bot.glb"
+const MODEL_PATH1 = "./models/test_1.glb"
 
 // const 로 선언을 하면 변수값을 할당 할 수가 없다. let 이나 var로 할 것
 let activeOption = 'Top';
@@ -108,32 +106,55 @@ function setMaterial(parent, type, mtl) {
         if (shadow.isMesh && shadow.nameID != null) {
             if (shadow.nameID == type) {
                 shadow.material = mtl;
-
             }
         }
     })
 }
 
 const loader = new GLTFLoader;
-
 // gltf(shelf) 생성
 loader.load(MODEL_PATH1, function (Top) {
+        console.log('success')
+        console.log(Top)
     theModel = Top.scene;
     // 그림자 추가
     theModel.traverse((Top) => {
         if (Top.isMesh) {
             Top.castShadow = true;
             Top.receiveShadow = true;
+            // object 숨기기
+            Top.visible = false;
         }
     });
-    theModel.scale.set(2, 2, 2);
+    theModel.scale.set(3, 2, 2);
     //theModel.rotation.x = Math.PI;
     theModel.position.y = -1;
-
+    console.log(theModel.scale);
     // 초기 텍스처 설정 
     for (let object of INITIAL_MAP) {
         initColor(theModel, object.childID, object.mtl);
     }
+    document.getElementById("TopHideShow").addEventListener("click", function () {
+        // 앞에서 Top.scene를 theModel로 선언했기 때문에
+        // children[0] 는 mesh의 갯수
+        // 여기서 2번의 경우 Top 3번의 경우 TopEdge를 뜻 함
+        theModel.children[2].visible = !theModel.children[2].visible;
+        theModel.children[3].visible = !theModel.children[3].visible;
+    });
+    document.getElementById("FrameHideShow").addEventListener("click", function () {
+        theModel.children[4].visible = !theModel.children[4].visible;
+    });
+    document.getElementById("BotHideShow").addEventListener("click", function () {
+        theModel.children[0].visible = !theModel.children[0].visible;
+        theModel.children[1].visible = !theModel.children[1].visible;
+    });
+    document.getElementById("Size1").addEventListener("click", function () {
+        theModel.scale.set(1,1,1)
+    });
+    document.getElementById("Size2").addEventListener("click", function () {
+        theModel.scale.set(3,2,2)
+    });
+    
     // scene에 threModel추가
     scene.add(theModel);
 })
@@ -184,7 +205,8 @@ const BACKGROUND_COLOR = 0xf1f1f1;
 scene.background = new THREE.Color(BACKGROUND_COLOR);
 const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-camera.position.z = 5;
+camera.position.z = 2;
+camera.position.y = -5;
 
 // 카메라 생성 된 후에 위치
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -197,11 +219,11 @@ controls.autoRotate = false;
 controls.autoRotateSpeed = 0.2;
 
 // 바닥생성 width, height, widthSegment(분할), heightSegment(분할) ex)1일 경우 1칸을 나눔
-const floorGeometry = new THREE.PlaneGeometry(5000, 5000, 1, 1)
-const floorMeterial = new THREE.MeshPhongMaterial({
-    color: 0x999999,
-    shininess: 0
-})
+// const floorGeometry = new THREE.PlaneGeometry(5000, 5000, 1, 1)
+// const floorMeterial = new THREE.MeshPhongMaterial({
+//     color: 0x999999,
+//     shininess: 0
+// })
 
 // 바닥
 // const floor = new THREE.Mesh(floorGeometry, floorMeterial)
