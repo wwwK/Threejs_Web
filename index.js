@@ -329,7 +329,7 @@ function save(blob, filename) {
 }
 
 function animate() {
-    controls.update();s
+    controls.update();
 
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
