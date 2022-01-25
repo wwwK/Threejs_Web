@@ -27,6 +27,163 @@ const colors = [
     }
 ]
 
+let theModel;
+// GLB파일 경로
+const MODEL_PATH1 = "./models/shelf_0101_w600_d400_top.gltf";
+const MODEL_PATH2 = "./models/shelf_0301_t50_h600_w600_frame.gltf"
+const MODEL_PATH3 = "./models/shelf_0101_w600_d400_bot.gltf"
+
+// 배경색
+const BACKGROUND_COLOR = 0xf1f1f1;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(BACKGROUND_COLOR);
+
+// HTML에 만든 캔버스에 THREEJS 설정 넣기
+const canvas = document.querySelector('#c');
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+// resizeRendererToDisplaySize와 비슷한 효과인듯?
+// renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.shadowMap.enabled = true;
+renderer.setPixelRatio(window.devicePixelRatio);
+
+const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 2;
+camera.position.y = -5;
+
+// 블렌더에서 부여한 이름과 같이
+const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0xf1f1f1, shininess: 10 });
+const INITIAL_MAP = [
+    { childID: "mesh_0", mtl: INITIAL_MTL },
+    { childID: "mesh_0_1", mtl: INITIAL_MTL },
+    { childID: "shelf_0301_t50_h600_w600_frame", mtl: INITIAL_MTL },
+    { childID: "mesh_0", mtl: INITIAL_MTL },
+    { childID: "mesh_0_1", mtl: INITIAL_MTL }
+]
+
+const loader = new GLTFLoader;
+// gltf(shelf) 생성
+// loader.load(MODEL_PATH1, function (Top) {
+//     console.log('success')
+//     console.log(Top)
+//     theModel = Top.scene;
+//     // 그림자 추가
+//     theModel.traverse((Top) => {
+//         if (Top.isMesh) {
+//             Top.castShadow = true;
+//             Top.receiveShadow = true;
+//             // object 숨기기
+//             Top.visible = false;
+//         }
+//     });
+//     theModel.scale.set(3, 2, 2);
+//     //theModel.rotation.x = Math.PI;
+//     theModel.position.y = -1;
+//     console.log(theModel.scale);
+//     // 초기 텍스처 설정 
+//     for (let object of INITIAL_MAP) {
+//         initColor(theModel, object.childID, object.mtl);
+//     }
+//     document.getElementById("TopHideShow").addEventListener("click", function () {
+//         // 앞에서 Top.scene를 theModel로 선언했기 때문에
+//         // children[0] 는 mesh의 갯수
+//         // 여기서 2번의 경우 Top 3번의 경우 TopEdge를 뜻 함
+//         theModel.children[2].visible = !theModel.children[2].visible;
+//         theModel.children[3].visible = !theModel.children[3].visible;
+//     });
+//     document.getElementById("FrameHideShow").addEventListener("click", function () {
+//         theModel.children[4].visible = !theModel.children[4].visible;
+//     });
+//     document.getElementById("BotHideShow").addEventListener("click", function () {
+//         theModel.children[0].visible = !theModel.children[0].visible;
+//         theModel.children[1].visible = !theModel.children[1].visible;
+//     });
+//     document.getElementById("Size1").addEventListener("click", function () {
+//         theModel.scale.set(1, 1, 1)
+//     });
+//     document.getElementById("Size2").addEventListener("click", function () {
+//         theModel.scale.set(3, 2, 2)
+//     });
+
+//     // scene에 threModel추가
+//     scene.add(theModel);
+// })
+
+loader.load(MODEL_PATH1, function (Top) {
+    console.log('success')
+    console.log(Top)
+    theModel = Top.scene;
+    // 그림자 추가
+    theModel.traverse((Top) => {
+        if (Top.isMesh) {
+            Top.castShadow = true;
+            Top.receiveShadow = true;
+            // object 숨기기
+            //Bot.visible = false;
+        }
+    });
+    theModel.scale.set(1, 1, 1);
+    //theModel.rotation.x = Math.PI;
+    theModel.position.y = -1;
+    // 초기 텍스처 설정 
+    for (let object of INITIAL_MAP) {
+        initColor(theModel, object.childID, object.mtl);
+    }
+
+    // scene에 threModel추가
+    scene.add(theModel);
+})
+
+loader.load(MODEL_PATH2, function (Frame) {
+    console.log('success')
+    console.log(Frame)
+    theModel = Frame.scene;
+    // 그림자 추가
+    theModel.traverse((Frame) => {
+        if (Frame.isMesh) {
+            Frame.castShadow = true;
+            Frame.receiveShadow = true;
+            // object 숨기기
+            //Bot.visible = false;
+        }
+    });
+    theModel.scale.set(1, 1, 1);
+    //theModel.rotation.x = Math.PI;
+    theModel.position.y = -1;
+    // 초기 텍스처 설정 
+    for (let object of INITIAL_MAP) {
+        initColor(theModel, object.childID, object.mtl);
+    }
+
+    // scene에 threModel추가
+    scene.add(theModel);
+})
+
+loader.load(MODEL_PATH3, function (Bot) {
+    console.log('success')
+    console.log(Bot)
+    theModel = Bot.scene;
+    // 그림자 추가
+    theModel.traverse((Bot) => {
+        if (Bot.isMesh) {
+            Bot.castShadow = true;
+            Bot.receiveShadow = true;
+            // object 숨기기
+            //Bot.visible = false;
+        }
+    });
+    theModel.scale.set(1, 1, 1);
+    //theModel.rotation.x = Math.PI;
+    theModel.position.y = -1;
+    // 초기 텍스처 설정 
+    for (let object of INITIAL_MAP) {
+        initColor(theModel, object.childID, object.mtl);
+    }
+    console.log(theModel)
+    // scene에 threModel추가
+    scene.add(theModel);
+})
+
 function buildColors(colors) {
     for (let [i, color] of colors.entries()) {
         let swatch = document.createElement('div');
@@ -48,13 +205,6 @@ const swatches = document.querySelectorAll(".tray__swatch");
 for (const swatch of swatches) {
     swatch.addEventListener('click', selectSwatch);
 }
-const scene = new THREE.Scene();
-// HTML에 만든 캔버스에 THREEJS 설정 넣기
-const canvas = document.querySelector('#c');
-
-let theModel;
-// GLB파일 경로
-const MODEL_PATH1 = "./models/test_1.glb"
 
 // const 로 선언을 하면 변수값을 할당 할 수가 없다. let 이나 var로 할 것
 let activeOption = 'Top';
@@ -111,64 +261,6 @@ function setMaterial(parent, type, mtl) {
     })
 }
 
-const loader = new GLTFLoader;
-// gltf(shelf) 생성
-loader.load(MODEL_PATH1, function (Top) {
-        console.log('success')
-        console.log(Top)
-    theModel = Top.scene;
-    // 그림자 추가
-    theModel.traverse((Top) => {
-        if (Top.isMesh) {
-            Top.castShadow = true;
-            Top.receiveShadow = true;
-            // object 숨기기
-            Top.visible = false;
-        }
-    });
-    theModel.scale.set(3, 2, 2);
-    //theModel.rotation.x = Math.PI;
-    theModel.position.y = -1;
-    console.log(theModel.scale);
-    // 초기 텍스처 설정 
-    for (let object of INITIAL_MAP) {
-        initColor(theModel, object.childID, object.mtl);
-    }
-    document.getElementById("TopHideShow").addEventListener("click", function () {
-        // 앞에서 Top.scene를 theModel로 선언했기 때문에
-        // children[0] 는 mesh의 갯수
-        // 여기서 2번의 경우 Top 3번의 경우 TopEdge를 뜻 함
-        theModel.children[2].visible = !theModel.children[2].visible;
-        theModel.children[3].visible = !theModel.children[3].visible;
-    });
-    document.getElementById("FrameHideShow").addEventListener("click", function () {
-        theModel.children[4].visible = !theModel.children[4].visible;
-    });
-    document.getElementById("BotHideShow").addEventListener("click", function () {
-        theModel.children[0].visible = !theModel.children[0].visible;
-        theModel.children[1].visible = !theModel.children[1].visible;
-    });
-    document.getElementById("Size1").addEventListener("click", function () {
-        theModel.scale.set(1,1,1)
-    });
-    document.getElementById("Size2").addEventListener("click", function () {
-        theModel.scale.set(3,2,2)
-    });
-    
-    // scene에 threModel추가
-    scene.add(theModel);
-})
-
-// 블렌더에서 부여한 이름과 같이
-const INITIAL_MTL = new THREE.MeshPhongMaterial({ color: 0xf1f1f1, shininess: 10 });
-const INITIAL_MAP = [
-    { childID: "Top", mtl: INITIAL_MTL },
-    { childID: "TopEdge", mtl: INITIAL_MTL },
-    { childID: "Frame", mtl: INITIAL_MTL },
-    { childID: "Bot", mtl: INITIAL_MTL },
-    { childID: "BotEdge", mtl: INITIAL_MTL }
-]
-
 // initColor : 함수의 이름 (함수를 전달 할 인수(parent, type, mtl))
 // 모델에 텍스쳐 추가하기
 function initColor(parent, type, mtl) {
@@ -193,21 +285,6 @@ dirLight.castShadow = true;
 dirLight.shadow.mapSize = new THREE.Vector2(1024, 1024);
 scene.add(dirLight);
 
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-// resizeRendererToDisplaySize와 비슷한 효과인듯?
-// renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.shadowMap.enabled = true;
-renderer.setPixelRatio(window.devicePixelRatio);
-
-
-// 배경색
-const BACKGROUND_COLOR = 0xf1f1f1;
-scene.background = new THREE.Color(BACKGROUND_COLOR);
-const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-camera.position.z = 2;
-camera.position.y = -5;
-
 // 카메라 생성 된 후에 위치
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.maxPolarAngle = Math.PI / 2;
@@ -217,20 +294,6 @@ controls.enablePan = false;
 controls.dampingFactor = 0.1;
 controls.autoRotate = false;
 controls.autoRotateSpeed = 0.2;
-
-// 바닥생성 width, height, widthSegment(분할), heightSegment(분할) ex)1일 경우 1칸을 나눔
-// const floorGeometry = new THREE.PlaneGeometry(5000, 5000, 1, 1)
-// const floorMeterial = new THREE.MeshPhongMaterial({
-//     color: 0x999999,
-//     shininess: 0
-// })
-
-// 바닥
-// const floor = new THREE.Mesh(floorGeometry, floorMeterial)
-// floor.rotation.x = -0.5 * Math.PI;
-// floor.receiveShadow = true;
-// floor.position.y = -1;
-// scene.add(floor);
 
 //다운로드 버튼 생성 후 이벤트 추가
 const btn = document.getElementById('download-glb');
@@ -266,7 +329,7 @@ function save(blob, filename) {
 }
 
 function animate() {
-    controls.update();
+    controls.update();s
 
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
